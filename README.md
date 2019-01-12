@@ -89,6 +89,15 @@ Create mosaic from [mosaic project][mosaic_project]
 python mosaic.py reference tiles/
 ```
 
+## Issues and Challenges
+All faces are extracted from video footage. If you only want a select number of subjects, faces
+from other people will also be extracted. Added face recognition could solve
+this issue.
+
+Colors are limited. When creating mosaic from faces it's difficult to represent
+the complete color spectrum. Shifting weights of the color channels of some
+faces could help create better looking mosaics.
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
