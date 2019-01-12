@@ -1,0 +1,5 @@
+numpy==1.12.1
+opencv-python==3.3.0
+tqdm==4.29.0
+imutils==0.5.2
+Pillow==5.4.1
