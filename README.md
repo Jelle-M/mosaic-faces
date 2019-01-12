@@ -58,11 +58,11 @@ the episode numbers and rename the videofiles to make further processing easier.
 The following are run inside `src/` unless specified otherwise.
 The following scripts should be run in this order
 
-1. rename.py
-1. frames.py
-1. faces.py
-1. tiles.py
-1. mosaic.py from [mosaic project][mosaic_project]
+1. `rename.py`
+1. `frames.py`
+1. `faces.py`
+1. `tiles.py`
+1. `mosaic.py` from [mosaic project][mosaic_project]
 
 To avoid running these scripts manually for each video theres `
 video_to_tiles.py` that call steps 3-5. 
