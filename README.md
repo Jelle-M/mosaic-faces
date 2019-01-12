@@ -79,7 +79,7 @@ to `extracted.txt` and will no longer be run again unless specified by `-f`
 python3 video_to_tiles.py -fr -n 100 #Extract 100 frames of videos
 ```
 
-Create the tiles
+Extract faces and generate tiles
 ```
 python3 video_to_tiles.py 
 ```
