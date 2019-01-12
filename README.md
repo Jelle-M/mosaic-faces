@@ -59,10 +59,10 @@ The following are run inside `src/` unless specified otherwise.
 The following scripts should be run in this order
 ```
 1. rename.py
-1. frames.py
-1. faces.py
-1. tiles.py
-1. mosaic.py # from mosaic project
+2. frames.py
+3. faces.py
+4. tiles.py
+5. mosaic.py # from mosaic project
 ```
 
 To avoid running these scripts manually for each video theres `
