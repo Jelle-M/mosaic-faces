@@ -25,6 +25,7 @@ To get started you need to setup your environment.
 This project is developed on Ubuntu 18.04 LTS with requirements installed
 listed in Prerequisites.
 
+
 ## Todo
 - [ ] Docker image
 - [ ] Write docs
@@ -45,6 +46,7 @@ the episode numbers and rename the videofiles to make further processing easier.
 I've listed the required packages in [requirements.txt](requirements.txt)
 What things you need to install the software and how to install them
 
+
 ### Installing
 
 Refer to the opencv install guide (google this)
@@ -52,11 +54,11 @@ Refer to the opencv install guide (google this)
 To install packages with pip3
 `pip3 install -r requirements.txt`
 
+
 ## Deployment
 
 The following are run inside `src/` unless specified otherwise.
 The following scripts should be run in this order
-
 ```
 1. youtube-dl playlist from videos/ 
 2. rename.py
@@ -77,7 +79,6 @@ sh clean.sh f
 
 Extract frames from videos in `videos/`. Once a video is processed it is added
 to `extracted.txt` and will no longer be run again unless specified by `-f`
-option.
 ```
 python3 video_to_tiles.py -fr -n 100 #Extract 100 frames of videos
 ```
@@ -98,12 +99,13 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Acknowledgments
 
-* Critical Role
+* [Critical Role][critical_role_url]
 * [Mosaic project][mosaic_project]
-* [youtube-dl][ 
+* [youtube-dl][youtube-dl_project] 
 
 
 <!-- Links to image -->
+[critical_role_url]: https://critrole.com/
 [youtube-dl_project]: https://github.com/rg3/youtube-dl
 [mosaic_project]: https://github.com/codebox/mosaic
 [cr_frame1]: images/frame1.jpg "Frame 1 s02e01"
