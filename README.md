@@ -15,10 +15,6 @@ for a mosaic generator.
 
 Run [mosaic project][mosaic_project] with tiles and reference image
 
-![Result 1][cr_result1]: images/result1.jpg ""
-
-![Reference 1][cr_reference1]: images/reference1.jpg ""
-
 ## Getting Started
 
 To get started you need to setup your environment.
