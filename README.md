@@ -17,12 +17,6 @@ image.
 ![Reference 1][cr_reference1]
 ![Result 1][cr_result1]
 
-## Getting Started
-
-To get started you need to setup your environment.
-This project is developed on Ubuntu 18.04 LTS with requirements installed
-listed in Prerequisites.
-
 
 ## Todo
 - [ ] Docker image
@@ -30,14 +24,11 @@ listed in Prerequisites.
 - [ ] Add face recognition to label faces
 
 
-## Video footage
+## Getting Started
 
-Video footage was obtained using the [youtube-dl][youtube-dl_project] CLI utility. Simply pasting the playlist url into `youtube-dl playlist-url` downloads all episodes. Use the `--playlist-start` and `--playlist-end` arguments to select which episodes you'd like as each video has a size greater than 1GB.
-
-The episodes are named similar to `Curious Beginnings | Critical Role | Campaign 2,
-Episode 1` with the episode number mentioned. I used `src/rename.py` to parse
-the episode numbers and rename the videofiles to make further processing easier.
-
+To get started you need to setup your environment.
+This project is developed on Ubuntu 18.04 LTS with requirements installed
+listed in Prerequisites.
 
 ### Prerequisites
 
@@ -51,6 +42,15 @@ Refer to the opencv install guide (google this)
 
 To install packages with pip3
 `pip3 install -r requirements.txt`
+
+
+## Video footage
+
+Video footage was obtained using the [youtube-dl][youtube-dl_project] CLI utility. Simply pasting the playlist url into `youtube-dl playlist-url` downloads all episodes. Use the `--playlist-start` and `--playlist-end` arguments to select which episodes you'd like as each video has a size greater than 1GB.
+
+The episodes are named similar to `Curious Beginnings | Critical Role | Campaign 2,
+Episode 1` with the episode number mentioned. I used `src/rename.py` to parse
+the episode numbers and rename the videofiles to make further processing easier.
 
 
 ## Deployment
