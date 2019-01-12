@@ -6,14 +6,15 @@ In this project I'll be using episodes of Critical Role podcast.
 
 ![Frame 1 s02e01][cr_frame1]
 
-Scripts were written to extract square tiles of faces and then used as input
-for a mosaic generator.
-
-Tiles
+Scripts were written to extract faces and resized to square tiles.
 
 ![Tiles s02e01][cr_tiles1]
 
-Run [mosaic project][mosaic_project] with tiles and reference image
+Then used as input for a mosaic [generator][mosaic_project] with a reference
+image.
+
+![Reference 1][cr_reference1]
+![Result 1][cr_result1]
 
 ## Getting Started
 
