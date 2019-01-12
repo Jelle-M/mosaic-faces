@@ -10,10 +10,12 @@ Scripts were written to extract square tiles of faces and then used as input
 for a mosaic generator.
 
 ![][cr_faces1]
-*Faces s02e01*
+.caption[*Faces from s02e01*]
 
 ![][cr_tiles1]
-*Tiles s02e01*
+.caption[
+**Fig. 1:** Image caption 
+]
 
 Run [mosaic project][mosaic_project] with tiles and reference image
 
@@ -114,4 +116,4 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 [cr_reference1]: images/reference1.jpg "Reference 1"
 [cr_result1]: images/result1.jpg "Result 1"
 [cr_faces1]: images/faces_results/faces1.jpg "Faces 1 s02e01"
-[cr_tiles1]: images/tiles_results/tiles1.jpg "tiles 1 s02e01"
+[cr_tiles1]: images/tiles_results/tiles1.jpg "Tiles 1 s02e01"
