@@ -62,7 +62,7 @@ The following scripts should be run in this order
 1. frames.py
 1. faces.py
 1. tiles.py
-1. mosaic.py from [mosaic project][mosaic_project]
+1. mosaic.py # from mosaic project
 ```
 
 To avoid running these scripts manually for each video theres `
