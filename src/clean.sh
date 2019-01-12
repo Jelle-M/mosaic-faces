@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-rm -rf ../images/*
 rm -rf ../faces/*
 rm -rf ../out/*
 rm -rf ../tiles/*
