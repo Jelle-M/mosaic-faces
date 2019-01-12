@@ -8,6 +8,7 @@ In this project I'll be using episodes of Critical Role podcast.
 
 Scripts were written to extract faces and resized to square tiles.
 
+![Faces s02e01][cr_faces1]
 ![Tiles s02e01][cr_tiles1]
 
 Then used as input for a mosaic [generator][mosaic_project] with a reference
@@ -99,12 +100,6 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 * [Critical Role][critical_role_url]
 * [Mosaic project][mosaic_project]
 * [youtube-dl][youtube-dl_project] 
-
-<!--
-Faces
-
-![Faces s02e01][cr_faces1]
--->
 
 <!-- Links to image -->
 [critical_role_url]: https://critrole.com/
