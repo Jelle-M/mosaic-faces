@@ -9,33 +9,15 @@ In this project I'll be using episodes of Critical Role podcast.
 Scripts were written to extract square tiles of faces and then used as input
 for a mosaic generator.
 
-<figure>
-  <img src="images/faces_results/faces1.jpg"/>
-  <figcaption>This is my caption text.</figcaption>
-</figure>
+![Faces s02e01][cr_faces1]
 
-
-<figure>
-  <img src=[cr_faces1u]/>
-  <figcaption>This is my caption text.</figcaption>
-</figure>
-
-
-<figure>
-  <img src=[cr_faces1]/>
-  <figcaption>This is my caption text.</figcaption>
-</figure>
-
-![][cr_tiles1]
-.caption[
-**Fig. 1:** Image caption 
-]
+![Tiles s02e01][cr_tiles1]
 
 Run [mosaic project][mosaic_project] with tiles and reference image
 
-![Result 1][cr_result1]
+![Result 1][cr_result1]: images/result1.jpg ""
 
-![Reference 1][cr_reference1]
+![Reference 1][cr_reference1]: images/reference1.jpg ""
 
 ## Getting Started
 
@@ -130,5 +112,4 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 [cr_reference1]: images/reference1.jpg "Reference 1"
 [cr_result1]: images/result1.jpg "Result 1"
 [cr_faces1]: images/faces_results/faces1.jpg "Faces 1 s02e01"
-[cr_faces1u]: images/faces_results/faces1.jpg
-[cr_tiles1]: images/tiles_results/tiles1.jpg "Tiles 1 s02e01"
+[cr_tiles1]: images/tiles_results/tiles1.jpg "tiles 1 s02e01"
