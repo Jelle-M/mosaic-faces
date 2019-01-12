@@ -1,0 +1,4 @@
+download part of vod
+youtube-dl -g "https://www.youtube.com/watch?v=V_f2QkBdbRI"
+ffmpeg -i "OUTPUT-OF-FIRST URL" -ss 00:00:15.00 -t 00:00:10.00 -c copy out.mp4
+

@@ -19,6 +19,8 @@ def parse_args():
                         default='../extracted.txt')
     parser.add_argument('--videos', dest="video_dir", default='../videos/')
     parser.add_argument('-fr', '--frames', dest="frames", action='store_true')
+    parser.add_argument("-p", "--padding", type=int, default=0,
+                        help="amount of pixels padding")
     args = parser.parse_args()
     return args
 
@@ -57,7 +59,7 @@ if __name__ == '__main__':
         exit(0)
 
     # Extract faces
-    cmd = 'python3 faces.py'
+    cmd = f'python3 faces.py -p {args.padding}'
     print(cmd)
     os.system(cmd)
 

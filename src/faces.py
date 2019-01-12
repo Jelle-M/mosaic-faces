@@ -26,7 +26,7 @@ def write(image, out_dir, episode, index):
 
 
 def extract_faces(in_dir, out_dir, confidence_treshold=0.23, pattern='', verbose=False,
-                  model=DEFAULT_CAFFE_MODEL, prototxt=DEFAULT_CAFFE_PROTO):
+                  model=DEFAULT_CAFFE_MODEL, prototxt=DEFAULT_CAFFE_PROTO, padding=0):
     # load our serialized model from disk
     net = cv2.dnn.readNetFromCaffe(prototxt, model)
 
@@ -69,6 +69,12 @@ def extract_faces(in_dir, out_dir, confidence_treshold=0.23, pattern='', verbose
                 box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
                 (startX, startY, endX, endY) = box.astype("int")
 
+                # Add padding with out of bounds protection
+                startX = max(0, startX - padding)
+                startY = max(0, startY - padding)
+                endX = min(endX + padding, w)
+                endY = min(endY + padding, h)
+
                 # write face to face dir
                 face = image[startY:endY, startX:endX]
                 write(face, Path(out_dir), episode, index)
@@ -98,12 +104,14 @@ def extract_faces(in_dir, out_dir, confidence_treshold=0.23, pattern='', verbose
 # construct the argument parse and parse the arguments
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-p", "--prototxt",
+    parser.add_argument("-pr", "--prototxt",
                         help="path to Caffe 'deploy' prototxt file",
                         default=DEFAULT_CAFFE_PROTO)
     parser.add_argument("-m", "--model",
                         help="path to Caffe pre-trained model",
                         default=DEFAULT_CAFFE_MODEL)
+    parser.add_argument("-p", "--padding", type=int, default=0,
+                        help="amount of pixels padding")
     parser.add_argument("-c", "--confidence", type=float, default=0.23,
                         help="minimum probability to filter weak detections")
     parser.add_argument('-o', '--out', dest='out_dir', default='../faces/',
@@ -131,7 +139,7 @@ if __name__ == '__main__':
     # Extract Faces
     exit_code = extract_faces(
         args.in_dir, args.out_dir, confidence_treshold=args.confidence,
-        pattern=args.pattern, verbose=args.verbose,
+        pattern=args.pattern, verbose=args.verbose, padding=args.padding,
         model=DEFAULT_CAFFE_MODEL, prototxt=DEFAULT_CAFFE_PROTO)
 
     # Exit
