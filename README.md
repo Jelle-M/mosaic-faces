@@ -10,8 +10,10 @@ Scripts were written to extract square tiles of faces and then used as input
 for a mosaic generator.
 
 ![Faces s02e01][cr_faces1]
+*Faces s02e01*
 
 ![Tiles s02e01][cr_tiles1]
+*Tiles s02e01*
 
 Run [mosaic project][mosaic_project] with tiles and reference image
 
