@@ -9,7 +9,7 @@ In this project I'll be using episodes of Critical Role podcast.
 Scripts were written to extract square tiles of faces and then used as input
 for a mosaic generator.
 
-![Faces s02e01][cr_faces1]
+Tiles
 
 ![Tiles s02e01][cr_tiles1]
 
@@ -99,6 +99,11 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 * [Mosaic project][mosaic_project]
 * [youtube-dl][youtube-dl_project] 
 
+<!--
+Faces
+
+![Faces s02e01][cr_faces1]
+-->
 
 <!-- Links to image -->
 [critical_role_url]: https://critrole.com/
@@ -108,4 +113,4 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 [cr_reference1]: images/reference1.jpg "Reference 1"
 [cr_result1]: images/result1.jpg "Result 1"
 [cr_faces1]: images/faces_results/faces1.jpg "Faces 1 s02e01"
-[cr_tiles1]: images/tiles_results/tiles1.jpg "tiles 1 s02e01"
+[cr_tiles1]: images/tiles_results/tiles1.jpg "Tiles 1 s02e01"
