@@ -128,6 +128,7 @@ def parse_args():
                         help='output faces dir')
     parser.add_argument('-v', '--verbose', dest="verbose", action='store_true')
     parser.add_argument('-I', dest="info", action='store_true')
+    parser.add_argument('-s', dest="size", default=50, type=int)
     args = parser.parse_args()
     return args
 
@@ -143,6 +144,8 @@ if __name__ == '__main__':
     out_dir = Path(args.out_dir)
     if not out_dir.exists():
         out_dir.mkdir()
+
+    SIZE_DIM=args.size
 
     exit_code = main(args)
     exit(exit_code)
