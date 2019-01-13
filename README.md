@@ -17,11 +17,19 @@ image.
 ![Reference 1][cr_reference1]
 ![Result 1][cr_result1]
 
+Recognition based approach
+
+Labelled data for Liam and Sam
+![Liam 1][cr_liam1]
+![Sam 1][cr_sam1]
+
+![Recognition 1][cr_recognition1]
+
 
 ## Todo
 - [ ] Docker image
-- [ ] Write docs
-- [ ] Add face recognition to label faces
+- [x] Add face recognition to label faces
+- [ ] Find a better recognition method
 
 
 ## Getting Started
@@ -117,3 +125,6 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 [cr_result1]: images/result1.jpg "Result 1"
 [cr_faces1]: images/faces_results/faces1.jpg "Faces 1 s02e01"
 [cr_tiles1]: images/tiles_results/tiles1.jpg "Tiles 1 s02e01"
+[cr_recognition1]: images/result_recognition1.png "Recognition 1 s02e01"
+[cr_liam1]: images/Liam.jpg "Liam 1 s02e01"
+[cr_sam1]: images/Sam.jpg "Sam 1 s02e01"
