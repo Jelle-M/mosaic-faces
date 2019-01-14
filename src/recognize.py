@@ -11,6 +11,7 @@ import cv2
 import logging as log
 from tqdm import tqdm
 from pathlib import Path
+from datetime import datetime
 
 from imutils import paths
 import face_recognition
@@ -18,17 +19,26 @@ import pickle
 import dlib
 
 font = cv2.FONT_HERSHEY_SIMPLEX
-PADDING=0
+PADDING = 0
 DEFAULT_CAFFE_PROTO = '../trained_model/deploy.prototxt.txt'
 DEFAULT_CAFFE_MODEL = '../trained_model/res10_300x300_ssd_iter_140000.caffemodel'
-NUM_JITTERS=5
-TOLERANCE=0.7
+NUM_JITTERS = 5
+TOLERANCE = 0.7
+
+
+def write(image, out_dir, episode, index):
+    out_dir = Path(out_dir / episode)
+    if not out_dir.exists():
+        out_dir.mkdir()
+    frame_name = "{0}.jpg".format(index)
+    cv2.imwrite(str(out_dir / frame_name), image)
 
 
 def main(args):
     recognizer = cv2.face.LBPHFaceRecognizer_create()
     recognizer.read('../trained_model/trainer.yml')
-    names = ['Ashley', 'Laura', 'Liam', 'Marisha', 'Matthew', 'Sam', 'Talisien', 'Travis']
+    names = ['Ashley', 'Laura', 'Liam', 'Marisha',
+        'Matthew', 'Sam', 'Talisien', 'Travis']
 
     jpg_files = [str(p)
                  for p in Path(args.in_dir).glob(f'**/{args.pattern}*.jpg')]
@@ -49,11 +59,11 @@ def main(args):
         h, w = image.shape[:2]
 
         startY = 0
-        endY = h-1 
+        endY = h-1
         startX = 0
-        endX =  w-1
+        endX = w-1
         gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
-        id, confidence = recognizer.predict(gray[startY:endY,startX:endX])
+        id, confidence = recognizer.predict(gray[startY:endY, startX:endX])
         # If confidence is less them 100 ==> "0" : perfect match
         if (confidence < 60):
             confidence = "  {0}%".format(round(100 - confidence))
@@ -67,49 +77,55 @@ def main(args):
         y = startY - 10 if startY - 10 > 10 else startY + 10
         cv2.rectangle(image, (startX, startY), (endX, endY),
                       (0, 0, 255), 2)
-        cv2.putText(image, text, (startX, y), cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 0, 255), 2)
+        cv2.putText(image, text, (startX, y),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 0, 255), 2)
 
         # show the output image
-        if id is not "unknown" and args.verbose:
-            cv2.imshow("Output", image)
-            key = cv2.waitKey(0) & 0xFF
-            # if the `q` key was pressed, break from the loop
-            if key == ord("q"):
-                cv2.destroyAllWindows()
-                return 0
+        if id is not "unknown":
+            if args.verbose:
+                cv2.imshow("Output", image)
+                key = cv2.waitKey(0) & 0xFF
+                # if the `q` key was pressed, break from the loop
+
+                if key == ord("s"):
+                    continue
+                if key == ord("q"):
+                    cv2.destroyAllWindows()
+                    return 0
+                write(image, Path(args.out_dir), id, datetime.now())
     return 0
 
 
 # construct the argument parse and parse the arguments
 def parse_args():
-    parser = argparse.ArgumentParser()
+    parser=argparse.ArgumentParser()
     parser.add_argument('-v', '--verbose', dest="verbose", action='store_true')
     parser.add_argument('-t', '--tolerance', dest="tolerance", type=float,
                         default=0.6)
     parser.add_argument('-fp', '--pattern', dest="pattern", default='')
-    parser.add_argument("-e", "--encodings", dest='encoding_dir',
-                        default="../", help="path to serialized db of facial encodings")
+    parser.add_argument("-o", "--encodings", dest='out_dir',
+                        default="../ds_new", help="path to serialized db of facial encodings")
     parser.add_argument('-i', '--i', dest='in_dir', default='../faces/',
                         help='input dir')
-    args = parser.parse_args()
+    args=parser.parse_args()
     return args
 
 if __name__ == '__main__':
-    args = parse_args()
+    args=parse_args()
     if args.verbose:
         log.basicConfig(format="%(levelname)s: %(message)s", level=log.DEBUG)
         print("Verbose output.")
     else:
         log.basicConfig(format="%(levelname)s: %(message)s")
 
-    TOLERANCE = args.tolerance
+    TOLERANCE=args.tolerance
 
     # Create out_dir
     # out_dir = Path(args.out_dir)
     # if not out_dir.exists():
     #     out_dir.mkdir()
 
-    exit_code = main(args)
+    exit_code=main(args)
 
     # Exit
     exit(exit_code)

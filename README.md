@@ -29,7 +29,10 @@ Labelled data for Liam and Sam
 ## Todo
 - [ ] Docker image
 - [x] Add face recognition to label faces
-- [ ] Find a better recognition method
+- [x] Find a more accurate recognition method
+- [ ] Cleanup/refactor recognition code
+- [ ] Setup pipeline, video -> labelled faces 
+- [ ] Emotion detection on faces
 
 
 ## Getting Started
@@ -105,6 +108,11 @@ this issue.
 Colors are limited. When creating mosaic from faces it's difficult to represent
 the complete color spectrum. Shifting weights of the color channels of some
 faces could help create better looking mosaics.
+
+## Face recognition
+After experimenting with face detection + recognition combos the best one seems
+to be the HoG face detection to extract faces and label them. Then using the
+same extraction method and use a .LBPHFaceRecognizer_create
 
 ## License
 

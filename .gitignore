@@ -108,5 +108,7 @@ out/
 faces/
 videos/
 faces/
+frames/
 tiles/
 extracted.txt
+encodings.pkl
