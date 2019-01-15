@@ -9,9 +9,7 @@ In this project I'll be using episodes of Critical Role podcast.
 Scripts were written to extract faces and resized to square tiles.
 
 ![Faces s02e01][cr_faces1]
-![Tiles s02e01][cr_tiles1]
-
-Then used as input for a mosaic [generator][mosaic_project] with a reference
+![Tiles s02e01][cr_tiles1] Then used as input for a mosaic [generator][mosaic_project] with a reference
 image.
 
 ![Reference 1][cr_reference1]
@@ -24,6 +22,12 @@ Labelled data for Liam and Sam
 ![Sam 1][cr_sam1]
 
 ![Recognition 1][cr_recognition1]
+
+Other outputs
+
+![Marisha 1][cr_marisha1]
+![Travis 1][cr_travis2]
+![Travis Large][cr_travis3]
 
 
 ## Todo
@@ -136,3 +140,7 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 [cr_recognition1]: images/result_recognition1.png "Recognition 1 s02e01"
 [cr_liam1]: images/Liam.jpg "Liam 1 s02e01"
 [cr_sam1]: images/Sam.jpg "Sam 1 s02e01"
+[cr_marisha1]: images/Marisha.gif "Marisha 1"
+[cr_travis2]: images/Travis.gif "Travis 1"
+[cr_travis3]: images/Travis.jpeg "Travis Large"
+
