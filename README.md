@@ -38,6 +38,41 @@ Other outputs
 - [ ] Setup pipeline, video -> labelled faces 
 - [ ] Emotion detection on faces
 
+## Chart
+<pre>
+download.sh
+ +------------+      +------------+
+ +videos.txt  |      +videos/     |
+ | list of vod+------> video files|
+ | URLs       |      |            |
+ +------------+      +------------+
+
+video_to_tiles.py
+ +----------------------------------------------------+
+ |                        +------------+  +---------+ |
+ |            +---------+ |faces.py    |  |tiles.py | |
+ | +-------+  |frames.py| | -SSD (fast)|  | reshape | |
+ | | video +--> frames/ +-> -HoG (slow)+-->  tiles/ | |
+ | +-------+  +---------+ |  faces/    |  +---------+ |
+ |                        +------------+              |
+ +----------------------------------------------------+
+
+with recognition                      +------------+
+ +--------------+   +-----------+     |recognize.py|
+ |label (manual)|   |train.py   +-----> faces/     |
+ | faces/       +---> ds/       |     |  ds_new    |
+ |  ds/         |   |  model.yml+--+  +------------+
+ +--------------+   +-----------+  |  +------------------+
+                                   +-->recognize_frame.py|
+mosaic                                | frames/          |
+ +--------------+                     |  ds_new          |
+ |mosaic.py     |                     +------------------+
+ | reference img|
+ | tiles/       |
+ |  mosaic.jpeg |
+ +--------------+
+</pre>
+
 
 ## Getting Started
 
