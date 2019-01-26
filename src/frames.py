@@ -6,7 +6,6 @@ import argparse
 import cv2
 from pathlib import Path
 import numpy as np
-import matplotlib.pyplot as plt
 from tqdm import tqdm
 import logging as log
 

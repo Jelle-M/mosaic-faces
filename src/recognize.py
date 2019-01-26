@@ -37,8 +37,7 @@ def write(image, out_dir, episode, index):
 def main(args):
     recognizer = cv2.face.LBPHFaceRecognizer_create()
     recognizer.read('../trained_model/trainer.yml')
-    names = ['Ashley', 'Laura', 'Liam', 'Marisha',
-        'Matthew', 'Sam', 'Talisien', 'Travis']
+    names = ['Nadine']
 
     jpg_files = [str(p)
                  for p in Path(args.in_dir).glob(f'**/{args.pattern}*.jpg')]
@@ -53,8 +52,12 @@ def main(args):
         log.debug(face_name)
 
         # read img
-        image = cv2.imread(jpg_file)
-        image_o = image.copy()
+        try:
+            image = cv2.imread(jpg_file)
+            image_o = image.copy()
+        except:
+            log.warning(f'Failed to open: {jpg_file}')
+            continue
 
         h, w = image.shape[:2]
 
@@ -65,7 +68,7 @@ def main(args):
         gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
         id, confidence = recognizer.predict(gray[startY:endY, startX:endX])
         # If confidence is less them 100 ==> "0" : perfect match
-        if (confidence < 60):
+        if (confidence < 80):
             confidence = "  {0}%".format(round(100 - confidence))
             id = names[id]
         else:
@@ -74,25 +77,26 @@ def main(args):
 
         # probability
         text = f"{id} {confidence}"
-        y = startY - 10 if startY - 10 > 10 else startY + 10
-        cv2.rectangle(image, (startX, startY), (endX, endY),
-                      (0, 0, 255), 2)
-        cv2.putText(image, text, (startX, y),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 0, 255), 2)
+        # y = startY - 10 if startY - 10 > 10 else startY + 10
+        # cv2.rectangle(image, (startX, startY), (endX, endY),
+        #               (0, 0, 255), 2)
+        # cv2.putText(image, text, (startX, y),
+        #             cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 0, 255), 2)
 
         # show the output image
         if id is not "unknown":
             if args.verbose:
-                cv2.imshow("Output", image)
+                cv2.imshow(text, image)
                 key = cv2.waitKey(0) & 0xFF
-                # if the `q` key was pressed, break from the loop
-
+                # Add face to ds unless 's' to skip
                 if key == ord("s"):
                     continue
                 if key == ord("q"):
                     cv2.destroyAllWindows()
                     return 0
-                write(image, Path(args.out_dir), id, datetime.now())
+                cv2.destroyAllWindows()
+            write(image, Path(args.out_dir), id,
+                  f'{confidence}_{datetime.now()}')
     return 0
 
 
@@ -103,8 +107,8 @@ def parse_args():
     parser.add_argument('-t', '--tolerance', dest="tolerance", type=float,
                         default=0.6)
     parser.add_argument('-fp', '--pattern', dest="pattern", default='')
-    parser.add_argument("-o", "--encodings", dest='out_dir',
-                        default="../ds_new", help="path to serialized db of facial encodings")
+    parser.add_argument("-o", "--out", dest='out_dir',
+                        default="../ds_new", help="path save recognized images")
     parser.add_argument('-i', '--i', dest='in_dir', default='../faces/',
                         help='input dir')
     args=parser.parse_args()
@@ -121,9 +125,9 @@ if __name__ == '__main__':
     TOLERANCE=args.tolerance
 
     # Create out_dir
-    # out_dir = Path(args.out_dir)
-    # if not out_dir.exists():
-    #     out_dir.mkdir()
+    out_dir = Path(args.out_dir)
+    if not out_dir.exists():
+        out_dir.mkdir()
 
     exit_code=main(args)
 
