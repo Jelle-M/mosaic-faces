@@ -32,7 +32,8 @@ def extract_faces(in_dir, out_dir, confidence_treshold=0.23, pattern='', verbose
 
     # loop over the frames from the input images
     # ** means recursive
-    jpg_files = [str(p) for p in Path(in_dir).glob(f'**/{pattern}*.jpg')]
+    log.debug(f'looking in {in_dir}')
+    jpg_files = [str(p) for p in Path(in_dir).glob(f'**/*{pattern}*/*.jpg')]
     index = 0
     for jpg_file in tqdm(jpg_files, total=len(jpg_files), unit="images"):
         # load the input image and construct an input blob for the image
@@ -73,10 +74,25 @@ def extract_faces(in_dir, out_dir, confidence_treshold=0.23, pattern='', verbose
                 startX = max(0, startX - padding)
                 startY = max(0, startY - padding)
                 endX = min(endX + padding, w)
-                endY = min(endY + padding, h)
-
-                # write face to face dir
+                endY = min(endY + padding, h) # write face to face dir
                 face = image[startY:endY, startX:endX]
+
+                if args.label:
+                    text = '\n'.join(f'{id}-{name}' for id, name in
+                        enumerate(args.labels))
+                    print(text)
+                    cv2.imshow("Label face - PRESS KEY", face)
+                    key = cv2.waitKey(0) & 0xFF
+                    # if the `q` key was pressed, break from the loop
+                    if key == ord("q"):
+                        exit(0)
+                    if key == ord("s"):
+                        continue
+                    id = int(chr(key))
+                    print(id)
+                    print(args.labels[id])
+                    write(face, Path(f'../ds'), args.labels[id], index)
+
                 write(face, Path(out_dir), episode, index)
                 index += 1
 
@@ -96,6 +112,7 @@ def extract_faces(in_dir, out_dir, confidence_treshold=0.23, pattern='', verbose
             # if the `q` key was pressed, break from the loop
             if key == ord("q"):
                 break
+
     # do a bit of cleanup
     cv2.destroyAllWindows()
     return 0
@@ -121,23 +138,40 @@ def parse_args():
     parser.add_argument('-v', '--verbose', dest="verbose", action='store_true')
     parser.add_argument('-fp', '--pattern', dest="pattern", default='')
     parser.add_argument('-I', dest="single_image", action='store_true')
-    args = parser.parse_args()
+    parser.add_argument('-L', dest="label", action='store_true')
+    parser.add_argument('-l', dest="labels", default=['Ashley',  'Laura',
+                                                      'Liam', 'Marisha',
+                                                      'Matthew', 'Sam',
+                                                      'Talisien', 'Travis'],
+                        nargs="+")
+    args=parser.parse_args()
     return args
 
 if __name__ == '__main__':
-    args = parse_args()
+    args=parse_args()
     if args.verbose:
         log.basicConfig(format="%(levelname)s: %(message)s", level=log.DEBUG)
         print("Verbose output.")
     else:
         log.basicConfig(format="%(levelname)s: %(message)s")
     # Create out_dir
-    out_dir = Path(args.out_dir)
+    out_dir=Path(args.out_dir)
     if not out_dir.exists():
         out_dir.mkdir()
 
+    ds_dir=Path('../ds')
+    if not ds_dir.exists():
+        ds_dir.mkdir()
+    if args.label:
+        for n in args.labels:
+            if not (ds_dir / n).exists():
+                (ds_dir / n).mkdir()
+        text = '\n'.join(f'{id}-{name}' for id, name in
+            enumerate(args.labels))
+        print(text)
+
     # Extract Faces
-    exit_code = extract_faces(
+    exit_code=extract_faces(
         args.in_dir, args.out_dir, confidence_treshold=args.confidence,
         pattern=args.pattern, verbose=args.verbose, padding=args.padding,
         model=DEFAULT_CAFFE_MODEL, prototxt=DEFAULT_CAFFE_PROTO)

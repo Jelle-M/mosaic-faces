@@ -37,10 +37,10 @@ def write(image, out_dir, episode, index):
 def main(args):
     recognizer = cv2.face.LBPHFaceRecognizer_create()
     recognizer.read('../trained_model/trainer.yml')
-    names = ['Nadine']
+    names = ['Ashley', 'Laura', 'Liam', 'Marisha', 'Matthew', 'Sam', 'Talisien', 'Travis']
 
     jpg_files = [str(p)
-                 for p in Path(args.in_dir).glob(f'**/{args.pattern}*.jpg')]
+                 for p in Path(args.in_dir).glob(f'**/*{args.pattern}*/*.jpg')]
 
     for jpg_file in tqdm(jpg_files, total=len(jpg_files), unit="images"):
         log.debug(f'Processing image {jpg_file}')
@@ -69,14 +69,14 @@ def main(args):
         id, confidence = recognizer.predict(gray[startY:endY, startX:endX])
         # If confidence is less them 100 ==> "0" : perfect match
         if (confidence < 80):
-            confidence = "  {0}%".format(round(100 - confidence))
+            confidence = "{0}%".format(round(100 - confidence))
             id = names[id]
         else:
             id = "unknown"
-            confidence = "  {0}%".format(round(100 - confidence))
+            confidence = "{0}%".format(round(100 - confidence))
 
         # probability
-        text = f"{id} {confidence}"
+        text = f"{id}-{confidence}"
         # y = startY - 10 if startY - 10 > 10 else startY + 10
         # cv2.rectangle(image, (startX, startY), (endX, endY),
         #               (0, 0, 255), 2)
