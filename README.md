@@ -4,8 +4,7 @@ Create a photomosaic with faces extracted from video footage.
 
 In this project I'll be using episodes of Critical Role podcast.
 
-![Frame 1 s02e01][cr_frame1]
-
+![Frame 1 s02e01][cr_frame1] 
 Scripts were written to extract faces and resized to square tiles.
 
 ![Faces s02e01][cr_faces1]
@@ -26,6 +25,10 @@ Extracted faces Travis and Marisha
 ![Travis 1][cr_travis1]
 ![Marisha 2][cr_marisha2]
 
+Difference detection and recogniton  
+![Detection][cr_detection2]
+![Recognition][cr_recognition2]
+
 Some gifs of tiles  
 ![Marisha 1][cr_marisha1] ![Travis 1][cr_travis2]
 
@@ -37,15 +40,25 @@ Mosaic Marisha (Keyleth)
 ![Keyleth Source][cr_Keylethsource1]
 ![Keyleth Large][cr_keyleth1]
 
+## Smile detector
+With a lot of data, we extract a lot of faces. With a 'smile detector' I tried
+to filter out the faces that show the most emotion. 
+
+Faces after filtering with a smile detector  
+
+![Laura smile][cr_smile1]
+
+
+
 
 ## Todo
 - [x] Add face recognition to label faces
 - [x] Find a more accurate recognition method
 - [x] Cleanup/refactor recognition code
+- [x] Emotion detection on faces
 - [ ] Small fixes (.jpg.jpg files, label names as args)
 - [ ] ~~Docker image~~
 - [ ] ~~Setup pipeline, video -> labelled faces~~
-- [ ] ~~Emotion detection on faces~~
 
 ## Chart
 <pre>
@@ -216,4 +229,7 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 [cr_keyleth1]: images/Keyleth.jpeg "Keyleth Large"
 [cr_Travissource1]: images/Travis_source.bmp "Travis source"
 [cr_Keylethsource1]: images/Keyleth_source.jpg "Keyleth source"
+[cr_smile1]: images/smile_laura.jpg "Laura smile"
+[cr_detection2]: images/DETECTION.jpg "detection"
+[cr_recognition2]: images/RECOGNITION.jpg "recognition"
 

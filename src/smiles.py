@@ -113,7 +113,10 @@ def main(args):
         except:
             os.system(f'rm {jpg_file}')
             continue
-        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        try:
+            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        except:
+            continue
 
         smile = smileCascade.detectMultiScale(
                     gray,
