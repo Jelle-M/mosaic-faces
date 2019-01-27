@@ -9,34 +9,43 @@ In this project I'll be using episodes of Critical Role podcast.
 Scripts were written to extract faces and resized to square tiles.
 
 ![Faces s02e01][cr_faces1]
-![Tiles s02e01][cr_tiles1] Then used as input for a mosaic [generator][mosaic_project] with a reference
-image.
+![Tiles s02e01][cr_tiles1]
+
+Then used as input for a mosaic [generator][mosaic_project] with a reference image.  
 
 ![Reference 1][cr_reference1]
 ![Result 1][cr_result1]
 
-Recognition based approach
+## Results with recognition based approach
 
-Labelled data for Liam and Sam
-![Liam 1][cr_liam1]
-![Sam 1][cr_sam1]
-
+Output DS after training with <30 face images per person.
+Output for a single frame  
 ![Recognition 1][cr_recognition1]
 
-Other outputs
+Extracted faces Travis and Marisha
+![Travis 1][cr_travis1]
+![Marisha 2][cr_marisha2]
 
-![Marisha 1][cr_marisha1]
-![Travis 1][cr_travis2]
+Some gifs of tiles  
+![Marisha 1][cr_marisha1] ![Travis 1][cr_travis2]
+
+Mosaic Travis  
+![Travis Source][cr_Travissource1]
 ![Travis Large][cr_travis3]
+
+Mosaic Marisha (Keyleth)  
+![Keyleth Source][cr_Keylethsource1]
+![Keyleth Large][cr_keyleth1]
 
 
 ## Todo
-- [ ] Docker image
 - [x] Add face recognition to label faces
 - [x] Find a more accurate recognition method
-- [ ] Cleanup/refactor recognition code
-- [ ] Setup pipeline, video -> labelled faces 
-- [ ] Emotion detection on faces
+- [x] Cleanup/refactor recognition code
+- [ ] Small fixes (.jpg.jpg files, label names as args)
+- [ ] ~~Docker image~~
+- [ ] ~~Setup pipeline, video -> labelled faces~~
+- [ ] ~~Emotion detection on faces~~
 
 ## Chart
 <pre>
@@ -82,13 +91,12 @@ listed in Prerequisites.
 
 ### Prerequisites
 
-I've listed the required packages in [requirements.txt](requirements.txt)
-What things you need to install the software and how to install them
+I've listed the required python packages in [requirements.txt](requirements.txt). You'll also need OpenCV. I used [3.4.4](https://docs.opencv.org/3.4.4/d2/de6/tutorial_py_setup_in_ubuntu.html).
 
 
 ### Installing
-
-Refer to the opencv install guide (google this)
+Refer to the opencv [3.4.4](https://docs.opencv.org/3.4.4/d2/de6/tutorial_py_setup_in_ubuntu.html)
+ install guide.
 
 To install packages with pip3
 `pip3 install -r requirements.txt`
@@ -139,6 +147,30 @@ Create mosaic from [mosaic project][mosaic_project]
 python mosaic.py reference tiles/
 ```
 
+### Recognition
+First we must train a model. In `ds/` I made directories so each person has about
+30 faces (extracted from faces.py).
+
+<pre>
+ds/
+├── Travis/
+│   ├── 0.jpg
+│   ├── 1.jpg
+│   ├── ...
+│   └── 29.jpg
+├── Marisha/
+│   ├── ...
+│   └── 28.jpg
+└── ...
+</pre>
+
+Then I run `train.py` to create a trained model. Then extract more frames from
+videos and this time run `recognize_frame.py` to create a ds_new folder with
+labelled faces.
+
+If all went well, in `ds_new/` there will be a structure similar to `ds/` with each
+folder containing only faces of the respective person.
+
 ## Issues and Challenges
 All faces are extracted from video footage. If you only want a select number of subjects, faces
 from other people will also be extracted. Added face recognition could solve
@@ -147,6 +179,9 @@ this issue.
 Colors are limited. When creating mosaic from faces it's difficult to represent
 the complete color spectrum. Shifting weights of the color channels of some
 faces could help create better looking mosaics.
+
+The recognition algorithm isn't 100% correct and mislabelled faces do happen.
+Luckily these mistakes are limited and can be corrected manually quite easily.
 
 ## Face recognition
 After experimenting with face detection + recognition combos the best one seems
@@ -172,10 +207,13 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 [cr_result1]: images/result1.jpg "Result 1"
 [cr_faces1]: images/faces_results/faces1.jpg "Faces 1 s02e01"
 [cr_tiles1]: images/tiles_results/tiles1.jpg "Tiles 1 s02e01"
-[cr_recognition1]: images/result_recognition1.png "Recognition 1 s02e01"
-[cr_liam1]: images/Liam.jpg "Liam 1 s02e01"
-[cr_sam1]: images/Sam.jpg "Sam 1 s02e01"
+[cr_recognition1]: images/result_recognition.png "Recognition 1 s02e01"
+[cr_marisha2]: images/Marisha.jpg "Marisha"
+[cr_travis1]: images/Travis.jpg "Travis"
 [cr_marisha1]: images/Marisha.gif "Marisha 1"
 [cr_travis2]: images/Travis.gif "Travis 1"
 [cr_travis3]: images/Travis.jpeg "Travis Large"
+[cr_keyleth1]: images/Keyleth.jpeg "Keyleth Large"
+[cr_Travissource1]: images/Travis_source.bmp "Travis source"
+[cr_Keylethsource1]: images/Keyleth_source.jpg "Keyleth source"
 
