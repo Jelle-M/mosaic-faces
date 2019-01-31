@@ -4,28 +4,30 @@
 # res10_300x300_ssd_iter_140000.caffemodel
 
 # import the necessary packages
-import numpy as np
 import argparse
-import imutils
-import cv2
 import logging as log
-from tqdm import tqdm
-from pathlib import Path
-from PIL import Image
-import PIL
 import os
+from pathlib import Path
+
+import numpy as np
+import PIL
+from PIL import Image
+from tqdm import tqdm
 
 SIZE_DIM = 50
+
 
 def flat(*nums):
     # Credit to
     # https://snipnyet.com/adierebel/5b45b79b77da154922550e9a/crop-and-resize-image-with-aspect-ratio-using-pillow/
-    'Build a tuple of ints from float or integer arguments. Useful because PIL crop and resize require integer points.'
+    """Build a tuple of ints from float or integer
+    arguments. Useful because PIL crop and resize require integer
+    points."""
 
     return tuple(int(round(n)) for n in nums)
 
 
-class Size(object):
+class Size():
     # Credit to
     # https://snipnyet.com/adierebel/5b45b79b77da154922550e9a/crop-and-resize-image-with-aspect-ratio-using-pillow/
 
@@ -45,12 +47,16 @@ class Size(object):
 def cropped_thumbnail(img, size):
     # Credit to
     # https://snipnyet.com/adierebel/5b45b79b77da154922550e9a/crop-and-resize-image-with-aspect-ratio-using-pillow/
-    '''
-    Builds a thumbnail by cropping out a maximal region from the center of the original with
-    the same aspect ratio as the target size, and then resizing. The result is a thumbnail which is
-    always EXACTLY the requested size and with no aspect ratio distortion (although two edges, either
-    top/bottom or left/right depending whether the image is too tall or too wide, may be trimmed off.)
-    '''
+    """
+    Builds a thumbnail by cropping
+    out a maximal region from the center of the original with
+    the same aspect ratio as the target size, and then
+    resizing. The result is a thumbnail which is
+    always EXACTLY the requested size and with no aspect
+    ratio distortion (although two edges, either
+    top/bottom or left/right depending
+    whether the image is too tall or too wide, may be trimmed off.)
+    """
     original = Size(img.size)
     target = Size(size)
     if target.aspect_ratio > original.aspect_ratio:
@@ -63,9 +69,9 @@ def cropped_thumbnail(img, size):
     elif target.aspect_ratio < original.aspect_ratio:
         # image is too wide: take some off the sides
         scale_factor = target.height / original.height
-        crop_size = Size((target.width/scale_factor, original.height))
+        crop_size = Size((target.width / scale_factor, original.height))
         side_cut_line = (original.width - crop_size.width) / 2
-        img = img.crop(flat(side_cut_line, 0,  side_cut_line +
+        img = img.crop(flat(side_cut_line, 0, side_cut_line +
                             crop_size.width, crop_size.height))
     return img.resize(target.size, Image.ANTIALIAS)
 
@@ -84,16 +90,16 @@ def mean_dimension(jpg_files):
                                        int(np.mean(h)), np.min(h), np.max(h)))
     w_mean = int(np.mean(w))
     h_mean = int(np.mean(h))
-    square_size = int((w_mean + h_mean)/2)
+    square_size = int((w_mean + h_mean) / 2)
     return square_size, square_size
     # return w_mean, h_mean
 
 
-def write(im, out_dir, episode, face_name):
-    out_dir = Path(out_dir / episode)
-    if not out_dir.exists():
-        out_dir.mkdir()
-    im.save(str(out_dir / face_name))
+def write(im, write_dir, episode, face_name):
+    write_dir = Path(write_dir / episode)
+    if not write_dir.exists():
+        write_dir.mkdir()
+    im.save(str(write_dir / face_name))
 
 
 def main(args):
@@ -108,7 +114,7 @@ def main(args):
     for jpg_file in tqdm(jpg_files, total=len(jpg_files), unit="images"):
         try:
             im = Image.open(jpg_file)
-        except:
+        except BaseException:
             os.system(f'rm {jpg_file}')
             continue
         im = im.resize(size, resample=PIL.Image.BICUBIC)
@@ -132,6 +138,7 @@ def parse_args():
     args = parser.parse_args()
     return args
 
+
 if __name__ == '__main__':
     args = parse_args()
     if args.verbose:
@@ -145,7 +152,7 @@ if __name__ == '__main__':
     if not out_dir.exists():
         out_dir.mkdir()
 
-    SIZE_DIM=args.size
+    SIZE_DIM = args.size
 
     exit_code = main(args)
     exit(exit_code)

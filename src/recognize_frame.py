@@ -4,18 +4,14 @@
 # res10_300x300_ssd_iter_140000.caffemodel
 
 # import the necessary packages
-import numpy as np
 import argparse
-import time
-import cv2
 import logging as log
-from tqdm import tqdm
 from pathlib import Path
 
-from imutils import paths
-import face_recognition
-import pickle
-import dlib
+import cv2
+import numpy as np
+from tqdm import tqdm
+
 
 def write(image, out_dir, episode, index):
     out_dir = Path(out_dir / episode)
@@ -27,7 +23,8 @@ def write(image, out_dir, episode, index):
 
 PADDING = 0
 DEFAULT_CAFFE_PROTO = '../trained_model/deploy.prototxt.txt'
-DEFAULT_CAFFE_MODEL = '../trained_model/res10_300x300_ssd_iter_140000.caffemodel'
+DEFAULT_CAFFE_MODEL = ('../trained_model/res10_300x300_ssd_ite'
+                       'r_140000.caffemodel')
 NUM_JITTERS = 5
 TOLERANCE = 0.7
 
@@ -46,9 +43,7 @@ def main(args):
         jpg_file_path = Path(jpg_file)
         frame_name = jpg_file_path.name
         name = jpg_file_path.parents[0].stem
-        log.debug(frame_name)
-        face_name = jpg_file_path.stem
-        log.debug(face_name)
+        # face_name = jpg_file_path.stem
 
         # read img
         image = cv2.imread(jpg_file)
@@ -57,15 +52,13 @@ def main(args):
         blob = cv2.dnn.blobFromImage(
             cv2.resize(
                 image, (300, 300)), 1.0,
-                (300, 300), (104.0, 177.0, 123.0))
+            (300, 300), (104.0, 177.0, 123.0))
 
         # pass the blob through the network and obtain the detections and
         # predictions
         net.setInput(blob)
         detections = net.forward()
-
-        boxes = []
-        names = []
+        boxes, names = [], []
         # Convert to grayscale to recognize
         gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
         # loop over the detections
@@ -80,8 +73,7 @@ def main(args):
                 # compute the (x, y)-coordinates of the bounding box for the
                 # object
                 box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
-                box = box.astype("int")
-                (startX, startY, endX, endY) = box
+                (startX, startY, endX, endY) = box.astype("int")
                 #  (top, right, bottom, left)
                 top = endY
                 right = endX
@@ -91,20 +83,21 @@ def main(args):
 
                 # label
                 try:
-                    id, confidence = recognizer.predict(
+                    name_id, confidence = recognizer.predict(
                         gray[startY:endY, startX:endX])
-                except:
+                except BaseException:
                     continue
                 # If confidence is less them 100 ==> "0" : perfect match
-                if (confidence < 72):
+                if confidence < 72:
                     confidence = "{0}%".format(round(100 - confidence))
-                    names.append(recognizer_names[id] + confidence)
-                    write(image[startY:endY, startX:endX], Path(f'../ds_new'), recognizer_names[id],
+                    names.append(recognizer_names[name_id] + confidence)
+                    write(image[startY:endY, startX:endX],
+                          Path(f'../ds_new'), recognizer_names[name_id],
                           frame_name)
                 else:
-                    id = "unknown"
+                    name_id = "unknown"
                     confidence = "{0}%".format(round(100 - confidence))
-                    names.append(id + confidence)
+                    names.append(name_id + confidence)
 
         log.debug(f'Faces detected: {len(boxes)}')
 
@@ -121,9 +114,8 @@ def main(args):
         if args.verbose:
             # show the output image
             cv2.imshow("Output", image)
-            key = cv2.waitKey(0) & 0xFF
             # if the `q` key was pressed, break from the loop
-            if key == ord("q"):
+            if (cv2.waitKey(0) & 0xFF) == ord("q"):
                 cv2.destroyAllWindows()
                 return 0
     return 0
@@ -142,6 +134,7 @@ def parse_args():
                         default='trainer.yml')
     args = parser.parse_args()
     return args
+
 
 if __name__ == '__main__':
     args = parse_args()

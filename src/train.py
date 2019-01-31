@@ -1,29 +1,28 @@
-#!/usr/bin/python3
+""" Train recognition model """
+# !/usr/bin/python3
 # USAGE
 # python detect_faces_video.py --prototxt deploy.prototxt.txt --model
 # res10_300x300_ssd_iter_140000.caffemodel
 
 # import the necessary packages
-import numpy as np
 import argparse
-import imutils
-import time
-import cv2
 import logging as log
-from tqdm import tqdm
 from pathlib import Path
 
-from imutils import paths
-import face_recognition
-import pickle
-import os
+import cv2
+import numpy as np
+from tqdm import tqdm
+
 
 def to_id(name):
-    names = ['Ashley', 'Laura', 'Liam', 'Marisha', 'Matthew', 'Sam', 'Talisien', 'Travis']
+    names = ['Ashley', 'Laura', 'Liam', 'Marisha',
+             'Matthew', 'Sam', 'Talisien', 'Travis']
     return int(names.index(name))
 
+
 def main(args):
-    jpg_files = [str(p) for p in Path(args.in_dir).glob(f'**/{args.pattern}*.jpg')]
+    jpg_files = [str(p)
+                 for p in Path(args.in_dir).glob(f'**/{args.pattern}*.jpg')]
     known_images = []
     known_ids = []
     for jpg_file in tqdm(jpg_files, total=len(jpg_files), unit="images"):
@@ -37,7 +36,7 @@ def main(args):
         log.debug(f'face_name {face_name}')
         image = cv2.imread(jpg_file)
         gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
-        gray = np.array(gray,'uint8')
+        gray = np.array(gray, 'uint8')
         known_ids.append(to_id(name))
         known_images.append(gray)
     known_ids = np.array(known_ids)
@@ -60,9 +59,11 @@ def parse_args():
     parser.add_argument("-i", "--dataset", dest="in_dir", default="../ds",
                         help="path to input directory of faces + images")
     parser.add_argument("-e", "--ids", dest='out_dir',
-                        default="../", help="path to serialized db of facial ids")
+                        default="../",
+                        help="path to serialized db of facial ids")
     args = parser.parse_args()
     return args
+
 
 if __name__ == '__main__':
     args = parse_args()

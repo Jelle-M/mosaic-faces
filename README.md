@@ -1,3 +1,5 @@
+
+[![Build Status](https://travis-ci.org/MoskiMBA/mosaic-faces.svg?branch=master)](https://travis-ci.org/MoskiMBA/mosaic-faces)
 # Mosaic-faces
 
 Create a photomosaic with faces extracted from video footage.

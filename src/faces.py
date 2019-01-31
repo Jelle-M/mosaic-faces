@@ -1,20 +1,22 @@
 #!/usr/bin/python3
+""" Extract faces from frames """
 # USAGE
 # python detect_faces_video.py --prototxt deploy.prototxt.txt --model
 # res10_300x300_ssd_iter_140000.caffemodel
+# pylint: disable=R0913
 
 # import the necessary packages
-import numpy as np
 import argparse
-import imutils
-import time
-import cv2
 import logging as log
-from tqdm import tqdm
 from pathlib import Path
 
+import cv2
+import numpy as np
+from tqdm import tqdm
+
 DEFAULT_CAFFE_PROTO = '../trained_model/deploy.prototxt.txt'
-DEFAULT_CAFFE_MODEL = '../trained_model/res10_300x300_ssd_iter_140000.caffemodel'
+DEFAULT_CAFFE_MODEL = ('../trained_model/res10_300x300_ssd_iter'
+                       '_140000.caffemodel')
 
 
 def write(image, out_dir, episode, index):
@@ -25,8 +27,9 @@ def write(image, out_dir, episode, index):
     cv2.imwrite(str(out_dir / frame_name), image)
 
 
-def extract_faces(in_dir, out_dir, confidence_treshold=0.23, pattern='', verbose=False,
-                  model=DEFAULT_CAFFE_MODEL, prototxt=DEFAULT_CAFFE_PROTO, padding=0):
+def extract_faces(in_dir, out_dir, confidence_treshold=0.23,
+                  pattern='', verbose=False, model=DEFAULT_CAFFE_MODEL,
+                  prototxt=DEFAULT_CAFFE_PROTO, padding=0):
     # load our serialized model from disk
     net = cv2.dnn.readNetFromCaffe(prototxt, model)
 
@@ -50,7 +53,7 @@ def extract_faces(in_dir, out_dir, confidence_treshold=0.23, pattern='', verbose
         blob = cv2.dnn.blobFromImage(
             cv2.resize(
                 image, (300, 300)), 1.0,
-                (300, 300), (104.0, 177.0, 123.0))
+            (300, 300), (104.0, 177.0, 123.0))
 
         # pass the blob through the network and obtain the detections and
         # predictions
@@ -74,12 +77,12 @@ def extract_faces(in_dir, out_dir, confidence_treshold=0.23, pattern='', verbose
                 startX = max(0, startX - padding)
                 startY = max(0, startY - padding)
                 endX = min(endX + padding, w)
-                endY = min(endY + padding, h) # write face to face dir
+                endY = min(endY + padding, h)  # write face to face dir
                 face = image[startY:endY, startX:endX]
 
                 if args.label:
                     text = '\n'.join(f'{id}-{name}' for id, name in
-                        enumerate(args.labels))
+                                     enumerate(args.labels))
                     print(text)
                     cv2.imshow("Label face - PRESS KEY", face)
                     key = cv2.waitKey(0) & 0xFF
@@ -88,10 +91,10 @@ def extract_faces(in_dir, out_dir, confidence_treshold=0.23, pattern='', verbose
                         exit(0)
                     if key == ord("s"):
                         continue
-                    id = int(chr(key))
-                    print(id)
-                    print(args.labels[id])
-                    write(face, Path(f'../ds'), args.labels[id], index)
+                    name_id = int(chr(key))
+                    print(name_id)
+                    print(args.labels[name_id])
+                    write(face, Path(f'../ds'), args.labels[name_id], index)
 
                 write(face, Path(out_dir), episode, index)
                 index += 1
@@ -108,9 +111,8 @@ def extract_faces(in_dir, out_dir, confidence_treshold=0.23, pattern='', verbose
         # show the output image
         if verbose:
             cv2.imshow("Output", image)
-            key = cv2.waitKey(0) & 0xFF
             # if the `q` key was pressed, break from the loop
-            if key == ord("q"):
+            if cv2.waitKey(0) & 0xFF == ord("q"):
                 break
 
     # do a bit of cleanup
@@ -139,27 +141,28 @@ def parse_args():
     parser.add_argument('-fp', '--pattern', dest="pattern", default='')
     parser.add_argument('-I', dest="single_image", action='store_true')
     parser.add_argument('-L', dest="label", action='store_true')
-    parser.add_argument('-l', dest="labels", default=['Ashley',  'Laura',
+    parser.add_argument('-l', dest="labels", default=['Ashley', 'Laura',
                                                       'Liam', 'Marisha',
                                                       'Matthew', 'Sam',
                                                       'Talisien', 'Travis'],
                         nargs="+")
-    args=parser.parse_args()
+    args = parser.parse_args()
     return args
 
+
 if __name__ == '__main__':
-    args=parse_args()
+    args = parse_args()
     if args.verbose:
         log.basicConfig(format="%(levelname)s: %(message)s", level=log.DEBUG)
         print("Verbose output.")
     else:
         log.basicConfig(format="%(levelname)s: %(message)s")
     # Create out_dir
-    out_dir=Path(args.out_dir)
+    out_dir = Path(args.out_dir)
     if not out_dir.exists():
         out_dir.mkdir()
 
-    ds_dir=Path('../ds')
+    ds_dir = Path('../ds')
     if not ds_dir.exists():
         ds_dir.mkdir()
     if args.label:
@@ -167,11 +170,11 @@ if __name__ == '__main__':
             if not (ds_dir / n).exists():
                 (ds_dir / n).mkdir()
         text = '\n'.join(f'{id}-{name}' for id, name in
-            enumerate(args.labels))
+                         enumerate(args.labels))
         print(text)
 
     # Extract Faces
-    exit_code=extract_faces(
+    exit_code = extract_faces(
         args.in_dir, args.out_dir, confidence_treshold=args.confidence,
         pattern=args.pattern, verbose=args.verbose, padding=args.padding,
         model=DEFAULT_CAFFE_MODEL, prototxt=DEFAULT_CAFFE_PROTO)

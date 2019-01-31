@@ -3,12 +3,15 @@
 
 """ Extract tiles from video """
 import argparse
-from pathlib import Path
-from tqdm import tqdm
 import logging as log
 import os
+from pathlib import Path
+
+from tqdm import tqdm
 
 # construct the argument parse and parse the arguments
+
+
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('-v', '--verbose', dest="verbose", action='store_true')
@@ -24,6 +27,7 @@ def parse_args():
     args = parser.parse_args()
     return args
 
+
 if __name__ == '__main__':
     args = parse_args()
     if args.verbose:
@@ -35,7 +39,7 @@ if __name__ == '__main__':
     # Store names of already processed videos
     extracted_file = Path(args.extracted)
     extracted = extracted_file.open().read().split() if\
-            extracted_file.exists() else []
+        extracted_file.exists() else []
     # Extract frames
     video_dir = Path(args.video_dir)
     video_files = [str(v) for v in video_dir.glob('*')]

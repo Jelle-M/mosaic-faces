@@ -3,14 +3,12 @@
 
 """ Extract frames from video """
 import argparse
-import os
-import cv2
-from pathlib import Path
-import numpy as np
-import matplotlib.pyplot as plt
-from tqdm import tqdm
 import logging as log
+import os
 import re
+from pathlib import Path
+
+from tqdm import tqdm
 
 
 def parse_args():
@@ -42,6 +40,7 @@ def main(args):
         print(cmd)
         os.system(cmd)
     return 0
+
 
 if __name__ == '__main__':
     args = parse_args()

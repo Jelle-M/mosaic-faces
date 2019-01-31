@@ -3,31 +3,30 @@
 # python detect_faces_video.py --prototxt deploy.prototxt.txt --model
 # res10_300x300_ssd_iter_140000.caffemodel
 
+import argparse
+import logging as log
+import os
+from pathlib import Path
+
+import cv2
 # import the necessary packages
 import numpy as np
-import argparse
-import imutils
-import cv2
-import logging as log
-from tqdm import tqdm
-from pathlib import Path
 from PIL import Image
-import PIL
-import os
+from tqdm import tqdm
 
 SIZE_DIM = 50
-
 
 
 def flat(*nums):
     # Credit to
     # https://snipnyet.com/adierebel/5b45b79b77da154922550e9a/crop-and-resize-image-with-aspect-ratio-using-pillow/
-    'Build a tuple of ints from float or integer arguments. Useful because PIL crop and resize require integer points.'
+    """Build a tuple of ints from float or integer arguments.
+    Useful because PIL crop and resize require integer points."""
 
     return tuple(int(round(n)) for n in nums)
 
 
-class Size(object):
+class Size():
     # Credit to
     # https://snipnyet.com/adierebel/5b45b79b77da154922550e9a/crop-and-resize-image-with-aspect-ratio-using-pillow/
 
@@ -47,12 +46,16 @@ class Size(object):
 def cropped_thumbnail(img, size):
     # Credit to
     # https://snipnyet.com/adierebel/5b45b79b77da154922550e9a/crop-and-resize-image-with-aspect-ratio-using-pillow/
-    '''
-    Builds a thumbnail by cropping out a maximal region from the center of the original with
-    the same aspect ratio as the target size, and then resizing. The result is a thumbnail which is
-    always EXACTLY the requested size and with no aspect ratio distortion (although two edges, either
-    top/bottom or left/right depending whether the image is too tall or too wide, may be trimmed off.)
-    '''
+    """
+    Builds a thumbnail by cropping out a maximal region from
+    the center of the original with
+    the same aspect ratio as the target size, and then resizing.
+    The result is a thumbnail which is
+    always EXACTLY the requested size and with no aspect
+    ratio distortion (although two edges, either
+    top/bottom or left/right depending whether the
+    image is too tall or too wide, may be trimmed off.)
+    """
     original = Size(img.size)
     target = Size(size)
     if target.aspect_ratio > original.aspect_ratio:
@@ -65,9 +68,9 @@ def cropped_thumbnail(img, size):
     elif target.aspect_ratio < original.aspect_ratio:
         # image is too wide: take some off the sides
         scale_factor = target.height / original.height
-        crop_size = Size((target.width/scale_factor, original.height))
+        crop_size = Size((target.width / scale_factor, original.height))
         side_cut_line = (original.width - crop_size.width) / 2
-        img = img.crop(flat(side_cut_line, 0,  side_cut_line +
+        img = img.crop(flat(side_cut_line, 0, side_cut_line +
                             crop_size.width, crop_size.height))
     return img.resize(target.size, Image.ANTIALIAS)
 
@@ -86,9 +89,10 @@ def mean_dimension(jpg_files):
                                        int(np.mean(h)), np.min(h), np.max(h)))
     w_mean = int(np.mean(w))
     h_mean = int(np.mean(h))
-    square_size = int((w_mean + h_mean)/2)
+    square_size = int((w_mean + h_mean) / 2)
     return square_size, square_size
     # return w_mean, h_mean
+
 
 def write(image, out_dir, episode, index):
     out_dir = Path(out_dir / episode)
@@ -97,12 +101,12 @@ def write(image, out_dir, episode, index):
     frame_name = "{0}.jpg".format(index)
     cv2.imwrite(str(out_dir / frame_name), image)
 
+
 def main(args):
     # Grab all filenames of images
     jpg_files = [str(p) for p in Path(args.faces_dir).glob('**/*.jpg')]
     # Calculate mean width and heigth
     # size = mean_dimension(jpg_files)
-    size = (SIZE_DIM, SIZE_DIM)
     if args.info:
         return 0
     # Resize and write to output
@@ -110,29 +114,29 @@ def main(args):
     for jpg_file in tqdm(jpg_files, total=len(jpg_files), unit="images"):
         try:
             img = cv2.imread(jpg_file)
-        except:
+        except BaseException:
             os.system(f'rm {jpg_file}')
             continue
         try:
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        except:
+        except BaseException:
             continue
 
         smile = smileCascade.detectMultiScale(
-                    gray,
-                    scaleFactor=1.25,
-                    minNeighbors=27,
-                    minSize=(10, 10),
-                    )
+            gray,
+            scaleFactor=1.25,
+            minNeighbors=27,
+            minSize=(10, 10),
+        )
         for (xx, yy, ww, hh) in smile:
             cv2.rectangle(gray, (xx, yy), (xx + ww, yy + hh), (0, 255, 0), 2)
         if args.verbose:
             cv2.imshow('video', gray)
             k = cv2.waitKey(0) & 0xff
-            if k == ord('q'): # press 'ESC' to quit
+            if k == ord('q'):  # press 'ESC' to quit
                 cv2.destroyAllWindows()
                 break
-        if len(smile) > 0:
+        if smile:
             face_name = Path(jpg_file).name
             episode = Path(jpg_file).parents[0].stem
             write(img, out_dir, episode, face_name)
@@ -152,6 +156,7 @@ def parse_args():
     args = parser.parse_args()
     return args
 
+
 if __name__ == '__main__':
     args = parse_args()
     if args.verbose:
@@ -165,7 +170,7 @@ if __name__ == '__main__':
     if not out_dir.exists():
         out_dir.mkdir()
 
-    SIZE_DIM=args.size
+    SIZE_DIM = args.size
 
     exit_code = main(args)
     exit(exit_code)

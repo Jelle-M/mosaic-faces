@@ -1,29 +1,28 @@
 #!/usr/bin/python3
+""" Extracts faces using HoG method """
 # USAGE
 # python detect_faces_video.py --prototxt deploy.prototxt.txt --model
 # res10_300x300_ssd_iter_140000.caffemodel
 
 # import the necessary packages
-import numpy as np
 import argparse
-import imutils
-import time
-import cv2
 import logging as log
-from tqdm import tqdm
 from pathlib import Path
-import face_recognition
+
+import cv2
+from tqdm import tqdm
+import face_recognition  # pylint: disable=E0401
 
 
-def write(image, out_dir, episode, index):
-    out_dir = Path(out_dir / episode)
-    if not out_dir.exists():
-        out_dir.mkdir()
+def write(image, write_dir, episode, index):
+    write_dir = Path(write_dir / episode)
+    if not write_dir.exists():
+        write_dir.mkdir()
     frame_name = "{0}.jpg".format(index)
-    cv2.imwrite(str(out_dir / frame_name), image)
+    cv2.imwrite(str(write_dir / frame_name), image)
 
 
-def extract_faces(in_dir, out_dir, confidence_treshold=0.23, pattern='', verbose=False, padding=0):
+def extract_faces(in_dir, out_dir, pattern='', verbose=False, padding=0):
     # loop over the frames from the input images
     # ** means recursive
     jpg_files = [str(p) for p in Path(in_dir).glob(f'**/{pattern}*.jpg')]
@@ -102,6 +101,7 @@ def parse_args():
     args = parser.parse_args()
     return args
 
+
 if __name__ == '__main__':
     args = parse_args()
     if args.verbose:
@@ -116,8 +116,8 @@ if __name__ == '__main__':
 
     # Extract Faces
     exit_code = extract_faces(
-        args.in_dir, args.out_dir, confidence_treshold=args.confidence,
-        pattern=args.pattern, verbose=args.verbose, padding=args.padding)
+        args.in_dir, args.out_dir, pattern=args.pattern,
+        verbose=args.verbose, padding=args.padding)
 
     # Exit
     exit(exit_code)

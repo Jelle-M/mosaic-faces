@@ -3,11 +3,12 @@
 
 """ Extract frames from video """
 import argparse
-import cv2
+import logging as log
 from pathlib import Path
+
+import cv2
 import numpy as np
 from tqdm import tqdm
-import logging as log
 
 
 def get_desired_frames(length, n_frames, uniform=True):
@@ -15,15 +16,14 @@ def get_desired_frames(length, n_frames, uniform=True):
         interval = int((length) / n_frames)
         desired_frames = np.arange(interval, length, interval)
         return desired_frames
-    else:
-        X1 = np.random.normal(
-            loc=length/4, scale=length/4, size=int(n_frames/2))
-        X1 = X1.astype(int)
-        X2 = np.random.normal(loc=length/2 + length/4,
-                              scale=length/4, size=int(n_frames/2))
-        X2 = X2.astype(int)
-        X = np.hstack((X1, X2))
-        return X
+    X1 = np.random.normal(
+        loc=length / 4, scale=length / 4, size=int(n_frames / 2))
+    X1 = X1.astype(int)
+    X2 = np.random.normal(loc=length / 2 + length / 4,
+                          scale=length / 4, size=int(n_frames / 2))
+    X2 = X2.astype(int)
+    X = np.hstack((X1, X2))
+    return X
 
 
 def write(image, out_dir, episode, index):
@@ -36,13 +36,14 @@ def write(image, out_dir, episode, index):
 
 def extract_frames(video_file, out_dir, n_frames=10, uniform=True, episode=''):
     cap = cv2.VideoCapture(video_file)
-    success, image = cap.read()
+    _, image = cap.read()
     length = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     desired_frames = get_desired_frames(length, n_frames, uniform=uniform)
     n = len(desired_frames)
-    for i, index in tqdm(zip(desired_frames, range(n)), total=n, unit="frames"):
-        cap.set(1, i-1)
-        success, image = cap.read(1)
+    for i, index in tqdm(zip(desired_frames, range(n)),
+                         total=n, unit="frames"):
+        cap.set(1, i - 1)
+        _, image = cap.read(1)
         cap.get(1)
         write(image, out_dir, episode, index)
 
